@@ -41,8 +41,6 @@ export default function Home() {
     validateKeysAndTypes: false,
   });
 
-  console.log("state", state);
-
   const allowedIps = parseIps(state.allowedIps);
   const disallowedIps = parseIps(state.disallowedIps);
   const invalidIps = [...allowedIps, ...disallowedIps].flatMap((ip) => {
@@ -64,6 +62,7 @@ export default function Home() {
       <main className="grid grid-rows-[fit-content(100%)_fit-content(100%)] grid-cols-[1fr_fit-content(100%)] gap-8 align-middle max-w-3xl w-full row-start-2 items-center ">
         <h1 className="text-2xl w-fit">{`Wireguard "AllowedIPs" Calculator`}</h1>
         <a
+          className="cur"
           onClick={() => {
             setStateAtKey("allowedIps", DEFAULT_STATE.allowedIps);
             setStateAtKey("disallowedIps", DEFAULT_STATE.disallowedIps);
