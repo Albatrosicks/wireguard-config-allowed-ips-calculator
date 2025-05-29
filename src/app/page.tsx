@@ -317,7 +317,7 @@ export default function Home() {
           rel="noopener noreferrer"
         >
           <Image
-            src="/wireguard-allowed-ips-calculator/github.svg"
+            src="/wireguard-config-allowed-ips-calculator/github.svg"
             alt="Github icon"
             width={16}
             height={16}
