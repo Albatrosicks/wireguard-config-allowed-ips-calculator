@@ -11,7 +11,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useTheme } from "next-themes";
 import { parseWireguardConfig, updateWireguardConfig } from "@/lib/wireguard-parser";
 import { resolveEndpoints } from "@/lib/dns-resolver";
-import { sortedRegions, availablePorts, changeEndpoint } from "@/lib/regions";
+import { regionsByCategory, availablePorts, changeEndpoint } from "@/lib/regions";
 import { useEffect, useState } from "react";
 import {
   Select,
@@ -80,7 +80,8 @@ export default function Home() {
         
         // Apply region and port changes if selected
         if (selectedRegion !== "none" && endpoints.length > 0) {
-          const region = sortedRegions.find(r => r.id === selectedRegion);
+          const allRegions = Object.values(regionsByCategory).flat();
+          const region = allRegions.find(r => r.id === selectedRegion);
           if (region) {
             endpoints = endpoints.map(endpoint => 
               changeEndpoint(endpoint, region.prefix, selectedPort)
@@ -143,12 +144,18 @@ export default function Home() {
     // Prepare endpoints with region and port changes
     let modifiedEndpoints = parsedConfig.peerEndpoints;
     if (selectedRegion !== "none" && parsedConfig.peerEndpoints.length > 0) {
-      const region = sortedRegions.find(r => r.id === selectedRegion);
+      const allRegions = Object.values(regionsByCategory).flat();
+      const region = allRegions.find(r => r.id === selectedRegion);
       if (region) {
         modifiedEndpoints = parsedConfig.peerEndpoints.map(endpoint => {
           return changeEndpoint(endpoint, region.prefix, selectedPort);
         });
       }
+    } else if (selectedPort !== "none" && parsedConfig.peerEndpoints.length > 0) {
+      // Just change port if no region selected
+      modifiedEndpoints = parsedConfig.peerEndpoints.map(endpoint => {
+        return changeEndpoint(endpoint, "", selectedPort);
+      });
     }
     
     result = updateWireguardConfig(
@@ -192,9 +199,28 @@ export default function Home() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="none" suppressHydrationWarning>Без изменений</SelectItem>
-              {sortedRegions.map((region) => (
+              <div className="font-semibold px-2 py-1.5 text-sm">Европа/СНГ (0-80ms)</div>
+              {regionsByCategory['europe-cis'].map((region) => (
                 <SelectItem key={region.id} value={region.id}>
-                  {region.flag} {region.name} ({region.pingMin}-{region.pingMax}ms)
+                  {region.flag} {region.name} (~{region.pingMin}-{region.pingMax}ms)
+                </SelectItem>
+              ))}
+              <div className="font-semibold px-2 py-1.5 text-sm">Азия (30-250ms)</div>
+              {regionsByCategory['asia'].map((region) => (
+                <SelectItem key={region.id} value={region.id}>
+                  {region.flag} {region.name} (~{region.pingMin}-{region.pingMax}ms)
+                </SelectItem>
+              ))}
+              <div className="font-semibold px-2 py-1.5 text-sm">Северная Америка (130-200ms)</div>
+              {regionsByCategory['north-america'].map((region) => (
+                <SelectItem key={region.id} value={region.id}>
+                  {region.flag} {region.name} (~{region.pingMin}-{region.pingMax}ms)
+                </SelectItem>
+              ))}
+              <div className="font-semibold px-2 py-1.5 text-sm">Южная Америка (200-350ms)</div>
+              {regionsByCategory['south-america'].map((region) => (
+                <SelectItem key={region.id} value={region.id}>
+                  {region.flag} {region.name} (~{region.pingMin}-{region.pingMax}ms)
                 </SelectItem>
               ))}
             </SelectContent>
