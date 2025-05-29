@@ -15,8 +15,8 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: `Wireguard "AllowedIPs" Calculator`,
-  description: `A client side Wireguard "AllowedIPs" calculator. This can also be used as a generic tool to exclude a subset of CIDR's from a larger scoped CIDR`,
+  title: `Калькулятор AllowedIPs для WireGuard`,
+  description: `Клиентский калькулятор AllowedIPs для WireGuard. Может использоваться как универсальный инструмент для исключения подмножества CIDR из более широкого диапазона CIDR`,
 };
 
 export default function RootLayout({
@@ -25,7 +25,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

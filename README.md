@@ -1,14 +1,21 @@
 
-<h1 align="center">Wireguard "AllowedIPs" Calculator</h1>
+<h1 align="center">Калькулятор AllowedIPs для WireGuard</h1>
 
-A client side Wireguard "AllowedIPs" calculator. This can also be used as a generic tool to exclude a subset of CIDR's from a larger scoped CIDR.
+Клиентский калькулятор AllowedIPs для WireGuard с поддержкой автоматического разрешения DNS и выбора региона подключения. Может использоваться как универсальный инструмент для исключения подмножества CIDR из более широкого диапазона CIDR.
 
-Any change you make to Allowed IPs or Disallowed IPs is persisted in the url hash so you can easily bookmark calculations or send them to others. [For example, allow 0.0.0.0/0, disallow 1.1.1.1 and 8.8.8.8](https://tim-crisp.github.io/wireguard-allowed-ips-calculator#%7B%22allowedIps%22%3A%220.0.0.0%2F0%22%2C%22disallowedIps%22%3A%221.1.1.1%2C%208.8.8.8%22%7D).
+## Функциональность
+
+- 📝 Вставьте вашу конфигурацию WireGuard для автоматического извлечения адресов
+- 🌐 Автоматическое разрешение DNS для endpoint'ов
+- 🗺️ Выбор региона подключения с информацией о задержке
+- 🔌 Выбор порта подключения (1725, 5060, 51821)
+- 📋 Копирование итоговой конфигурации в буфер обмена
+- 🌙 Поддержка тёмной темы
 
 ---
 
 <div align="center">
-  <a href="https://tim-crisp.github.io/wireguard-allowed-ips-calculator">Open App</a>
+  <a href="https://albatrosicks.github.io/wireguard-config-allowed-ips-calculator">Открыть приложение</a>
 </div>
 
 ---
@@ -17,8 +24,17 @@ Any change you make to Allowed IPs or Disallowed IPs is persisted in the url has
 
 ![light-mode](public/app-light.png)
 
-## Credits
+## Использование
+
+1. Вставьте вашу конфигурацию WireGuard в текстовое поле
+2. При необходимости выберите регион для изменения endpoint'а
+3. Выберите порт подключения (или оставьте без изменений)
+4. Добавьте дополнительные исключаемые IP-адреса
+5. Скопируйте итоговую конфигурацию с рассчитанными AllowedIPs
+
+## Технологии
 
 - [next.js](https://github.com/vercel/next.js)
 - [shadcn](https://github.com/shadcn-ui/ui)
 - [cidr-tools](https://github.com/silverwind/cidr-tools)
+- DNS-over-HTTPS (Cloudflare)
