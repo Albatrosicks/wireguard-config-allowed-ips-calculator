@@ -26,6 +26,7 @@ const PRIVATE_IPS = ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"];
 const DEFAULT_STATE = {
   wireguardConfig: "",
   additionalDisallowedIps: "172.18.20.0/30",
+  allowedIps: "0.0.0.0/0",
 };
 
 const parseIps = (input: string = "") =>
@@ -43,6 +44,7 @@ const parseIps = (input: string = "") =>
 type AppState = {
   wireguardConfig?: string;
   additionalDisallowedIps?: string;
+  allowedIps?: string;
 };
 
 export default function Home() {
@@ -112,8 +114,7 @@ export default function Home() {
 
   const parsedConfig = state.wireguardConfig ? parseWireguardConfig(state.wireguardConfig) : { interfaceAddress: [], peerEndpoints: [], originalConfig: '' };
   const additionalDisallowedIps = parseIps(state.additionalDisallowedIps);
-  
-  const allowedIps = ["0.0.0.0/0"];
+  const allowedIps = parseIps(state.allowedIps || "0.0.0.0/0");
   const disallowedIps = [
     ...parsedConfig.interfaceAddress,
     ...resolvedEndpoints,
@@ -168,6 +169,7 @@ export default function Home() {
           onClick={() => {
             setStateAtKey("wireguardConfig", DEFAULT_STATE.wireguardConfig);
             setStateAtKey("additionalDisallowedIps", DEFAULT_STATE.additionalDisallowedIps);
+            setStateAtKey("allowedIps", DEFAULT_STATE.allowedIps);
           }}
         >
           Очистить
@@ -211,6 +213,14 @@ export default function Home() {
               ))}
             </SelectContent>
           </Select>
+
+          <Label htmlFor="allowed-ips">Разрешаемые адреса</Label>
+          <Input
+            id="allowed-ips"
+            name="allowedIps"
+            onChange={(e) => setStateAtKey("allowedIps", e.target.value)}
+            value={state.allowedIps ?? ""}
+          />
 
           <Label htmlFor="additional-disallowed-ips">Дополнительные исключаемые IP</Label>
           <Input
@@ -267,6 +277,16 @@ export default function Home() {
               </AlertDescription>
             </Alert>
           )}
+          
+          <Alert className="col-span-2">
+            <Info className="h-4 w-4" />
+            <AlertTitle>Разрешаемые адреса</AlertTitle>
+            <AlertDescription className="mt-2">
+              <div className="font-mono text-sm">
+                {allowedIps.join(", ") || "Нет"}
+              </div>
+            </AlertDescription>
+          </Alert>
           
           <Alert className="col-span-2">
             <Info className="h-4 w-4" />
